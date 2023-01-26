@@ -25,8 +25,8 @@ use App\Http\Controllers\AdminController;
 
 Route::get("/", 'App\Http\Controllers\HomeController@index');
 
-Route::post("/register/confirm",'App\Http\Controllers\HomeController@register')->name('register/confirm');
-Route::get("/redirects",'App\Http\Controllers\HomeController@redirects');
+Route::post("/register/confirm", 'App\Http\Controllers\HomeController@register')->name('register/confirm');
+Route::get("/redirects", 'App\Http\Controllers\HomeController@redirects');
 
 #Route::get("/menu",'App\Http\Controllers\MenuController@menu');
 Route::get('/menu', [MenuController::class, 'menu'])->name('menu');
@@ -94,7 +94,7 @@ Route::group(['middleware' => ['customAuth']], function () {
 
     // Refund Routes for bKash
     Route::get('bkash/refund', 'BkashRefundController@index')->name('bkash-refund');
-    
+
     Route::post('bkash/refund', 'BkashRefundController@refund')->name('bkash-refund');
 
 });
