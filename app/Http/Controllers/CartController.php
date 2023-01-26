@@ -25,18 +25,10 @@ class CartController extends Controller
             return redirect()->route('login');
 
         }
-        $carts = Cart::all()
-        ->where('user_id',Auth::user()->id)
-        ->where('product_order','no');
-        $carts_amount = DB::table('carts')
-        ->where('user_id',Auth::user()->id)
-        ->where('product_order','no')
-        ->count();
+        $carts = Cart::all()->where('user_id',Auth::user()->id)->where('product_order','no');
+        $carts_amount = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->count();
         $discount_price=0;
-        $without_discount_price = DB::table('carts')
-        ->where('user_id',Auth::user()->id)
-        ->where('product_order','no')
-        ->sum('subtotal');
+        $without_discount_price = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
 
         $coupon_code=NULL;
         
@@ -57,9 +49,7 @@ class CartController extends Controller
          {
 
 
-            $validate=DB::table('coupons')
-            ->where('code',$coupon_code)
-            ->value('validate');
+            $validate=DB::table('coupons')->where('code',$coupon_code)->value('validate');
 
             $today=date("Y-m-d");
     
@@ -67,9 +57,7 @@ class CartController extends Controller
             {
     
 
-                $total_price = DB::table('carts')
-                ->where('user_id',Auth::user()->id)
-                ->where('product_order','no')->sum('subtotal');
+                $total_price = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
 
     
     
@@ -78,13 +66,10 @@ class CartController extends Controller
             else
             {
 
-                $total_price = DB::table('carts')
-                ->where('user_id',Auth::user()->id)
-                ->where('product_order','no')->sum('subtotal');
+                $total_price = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
 
             
-                $coupon_code_price=DB::table('coupons')
-                ->where('code',$coupon_code)->value('percentage');
+                $coupon_code_price=DB::table('coupons')->where('code',$coupon_code)->value('percentage');
     
                 $discount_price=(($total_price*$coupon_code_price)/100);
                 $discount_price=floor($discount_price);
@@ -105,10 +90,7 @@ class CartController extends Controller
          else
          {
 
-            $total_price = DB::table('carts')
-            ->where('user_id',Auth::user()->id)
-            ->where('product_order','no')
-            ->sum('subtotal');
+            $total_price = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
 
 
          }
