@@ -133,16 +133,16 @@ Route::get('/admin/chefs', [AdminController::class, 'chefs'])->name('/admin/chef
 
 
 
-Route::get('/admin/orders-incomplete', [AdminController::class, 'order_incomplete'])->name('/admin/orders-incomplete');
-Route::get('/orders-complete', [AdminController::class, 'order_complete'])->name('/orders-complete');
-Route::get('/admin/reservation', [AdminController::class, 'reservation'])->name('/admin/reservation');
-Route::get('/admin/coupon', [AdminController::class, 'coupon_show'])->name('/admin/coupon');
-Route::get('/admin/show', [AdminController::class, 'admin_show'])->name('/admin/show');
-Route::get('/customer', [AdminController::class, 'user_show'])->name('/customer');
-Route::get('/admin/charge', [AdminController::class, 'charge'])->name('/admin/charge');
-Route::get('/admin/banner/all', [AdminController::class, 'banner'])->name('/admin/banner/all');
-Route::get('/admin/customize', [AdminController::class, 'customize'])->name('/admin/cutomize');
-Route::get('/admin/add/banner', [AdminController::class, 'banner_add'])->name('/admin/add/banner');
+// Route::get('/admin/orders-incomplete', [AdminController::class, 'order_incomplete'])->name('/admin/orders-incomplete');
+// Route::get('/orders-complete', [AdminController::class, 'order_complete'])->name('/orders-complete');
+// Route::get('/admin/reservation', [AdminController::class, 'reservation'])->name('/admin/reservation');
+// Route::get('/admin/coupon', [AdminController::class, 'coupon_show'])->name('/admin/coupon');
+// Route::get('/admin/show', [AdminController::class, 'admin_show'])->name('/admin/show');
+// Route::get('/customer', [AdminController::class, 'user_show'])->name('/customer');
+// Route::get('/admin/charge', [AdminController::class, 'charge'])->name('/admin/charge');
+// Route::get('/admin/banner/all', [AdminController::class, 'banner'])->name('/admin/banner/all');
+// Route::get('/admin/customize', [AdminController::class, 'customize'])->name('/admin/cutomize');
+// Route::get('/admin/add/banner', [AdminController::class, 'banner_add'])->name('/admin/add/banner');
 
 Route::post('/menu/add/process', [AdminController::class, 'menu_add_process'])->name('/menu/add/process');
 Route::post('/chef/add/process', [AdminController::class, 'chef_add_process'])->name('/chef/add/process');
@@ -155,11 +155,11 @@ Route::get('/chef/delete/{id}', [AdminController::class, 'chef_delete_process'])
 Route::get('/menu/edit/{id}', [AdminController::class, 'menu_edit'])->name('/menu/edit');
 Route::get('/chef/edit/{id}', [AdminController::class, 'chef_edit'])->name('/chef/edit');
 
-Route::post('/menu/edit/process/{id}', [AdminController::class, 'menu_edit_process'])->name('/menu/edit/process');
-Route::post('/edit/chef/process/{id}', [AdminController::class, 'chef_edit_process'])->name('/edit/chef/process');
-Route::post('/invoice/approve/{id}', [AdminController::class, 'invoice_approve'])->name('/invoice/approve');
-Route::get('/invoice/details/{id}', [AdminController::class, 'invoice_details'])->name('invoice/details');
-Route::get('/invoice/cancel-order/{id}', [AdminController::class, 'invoice_cancel'])->name('/invoice/cancel-order');
+// Route::post('/menu/edit/process/{id}', [AdminController::class, 'menu_edit_process'])->name('/menu/edit/process');
+// Route::post('/edit/chef/process/{id}', [AdminController::class, 'chef_edit_process'])->name('/edit/chef/process');
+// Route::post('/invoice/approve/{id}', [AdminController::class, 'invoice_approve'])->name('/invoice/approve');
+// Route::get('/invoice/details/{id}', [AdminController::class, 'invoice_details'])->name('invoice/details');
+// Route::get('/invoice/cancel-order/{id}', [AdminController::class, 'invoice_cancel'])->name('/invoice/cancel-order');
 
 
 Route::get('/invoice/complete/{id}', [AdminController::class, 'invoice_complete'])->name('invoice/complete');

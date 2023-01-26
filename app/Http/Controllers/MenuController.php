@@ -9,10 +9,10 @@ class MenuController extends Controller
 {
 
     
-    public function menu(){
-        $products = Product::all();
-        return view('menu', compact('products'));
-    }
+    // public function menu(){
+    //     $products = Product::all();
+    //     return view('menu', compact('products'));
+    // }
     
     /**
      * Display a listing of the resource.
