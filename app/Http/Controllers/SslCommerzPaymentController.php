@@ -32,11 +32,11 @@ class SslCommerzPaymentController extends Controller
         # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
 
 
-        $total=Session::get('total');
+        $total = Session::get('total');
 
 
 
-        $invoice=Session::get('invoice');
+        $invoice = Session::get('invoice');
 
 
         $post_data = array();
@@ -45,9 +45,9 @@ class SslCommerzPaymentController extends Controller
         $post_data['tran_id'] = $invoice; // tran_id must be unique
 
 
-        Session::put('address',$request->address);
+        Session::put('address', $request->address);
 
-        
+
 
 
         # CUSTOMER INFORMATION
@@ -83,7 +83,7 @@ class SslCommerzPaymentController extends Controller
         $post_data['value_c'] = "ref003";
         $post_data['value_d'] = "ref004";
 
-        Session::put('address',$post_data['cus_add1']);
+        Session::put('address', $post_data['cus_add1']);
 
         #Before  going to initiate the payment order status need to insert or update as Pending.
         $update_product = DB::table('orders')
@@ -117,14 +117,14 @@ class SslCommerzPaymentController extends Controller
         # Lets your oder trnsaction informations are saving in a table called "orders"
         # In orders table order uniq identity is "transaction_id","status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
 
-        $total=Session::get('total');
+        $total = Session::get('total');
 
 
         $invoice = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyz"), 0, 8);
 
 
-        
-        Session::put('invoice',$invoice);
+
+        Session::put('invoice', $invoice);
 
 
         $post_data = array();
@@ -132,7 +132,7 @@ class SslCommerzPaymentController extends Controller
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = $invoice; // tran_id must be unique
 
-      
+
 
         # CUSTOMER INFORMATION
         $post_data['cus_name'] = Auth::user()->name;
@@ -167,7 +167,7 @@ class SslCommerzPaymentController extends Controller
         $post_data['value_c'] = "ref003";
         $post_data['value_d'] = "ref004";
 
-        Session::put('address',$post_data['cus_add1']);
+        Session::put('address', $post_data['cus_add1']);
         #Before  going to initiate the payment order status need to update as Pending.
         $update_product = DB::table('orders')
             ->where('transaction_id', $post_data['tran_id'])
@@ -181,8 +181,8 @@ class SslCommerzPaymentController extends Controller
                 'transaction_id' => $invoice,
                 'currency' => $post_data['currency']
             ]);
-    
- 
+
+
 
         $sslc = new SslCommerzNotification();
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
@@ -197,169 +197,175 @@ class SslCommerzPaymentController extends Controller
 
     public function success(Request $request)
     {
-       // echo "Transaction is Successful";
+        // echo "Transaction is Successful";
 
-       if(!Auth::user())
-       {
+        if (!Auth::user()) {
 
-           return redirect()->route('login');
-
-
-       }
+            return redirect()->route('login');
 
 
-
-       $data=array();
+        }
 
 
 
-       $invoice=Session::get('invoice');
-
-       /*
-       $order_list = DB::table('carts')->where('product_order','yes')->get();
+        $data = array();
 
 
-       foreach($order_list as $order)
-       {
 
-           while($order->invoice_no != $invoice)
-           {
+        $invoice = Session::get('invoice');
 
-               $invoice = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyz"), 0, 8);
-
-
-           }
-
-
-       }
-       */
-       //return $invoice;
-       
-       
-       $data['shipping_address']=Session::get('sub_address');
-       $data['product_order']="yes";
-       $data['invoice_no']=$invoice;
-       $data['pay_method']="Online Payment";
-       $data['delivery_time']="3 hours";
-       $data['purchase_date']=date("Y-m-d");
-
-
-     
-       
-       $products = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->get();
-
-
-       $total = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
-
-
-       $carts_amount = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->count();
-        $without_discount_price=$total;
-        $discount_price=0;
-        $coupon_code=NULL;
-        
-        if($carts_amount>0)
+        /*
+        $order_list = DB::table('carts')->where('product_order','yes')->get();
+        foreach($order_list as $order)
         {
-            foreach($products as $cart)
-            {
+        while($order->invoice_no != $invoice)
+        {
+        $invoice = substr(str_shuffle("0123456789abcdefghijklmnopqrstvwxyz"), 0, 8);
+        }
+        }
+        */
+        //return $invoice;
 
-                $coupon_code=$cart->coupon_id;
+
+        $data['shipping_address'] = Session::get('sub_address');
+        $data['product_order'] = "yes";
+        $data['invoice_no'] = $invoice;
+        $data['pay_method'] = "Online Payment";
+        $data['delivery_time'] = "3 hours";
+        $data['purchase_date'] = date("Y-m-d");
+
+
+
+
+        $products = DB::table('carts')
+            ->where('user_id', Auth::user()->id)
+            ->where('product_order', 'no')
+            ->get();
+
+
+        $total = DB::table('carts')
+            ->where('user_id', Auth::user()->id)
+            ->where('product_order', 'no')
+            ->sum('subtotal');
+
+
+        $carts_amount = DB::table('carts')
+            ->where('user_id', Auth::user()->id)
+            ->where('product_order', 'no')
+            ->count();
+        $without_discount_price = $total;
+        $discount_price = 0;
+        $coupon_code = NULL;
+
+        if ($carts_amount > 0) {
+            foreach ($products as $cart) {
+
+                $coupon_code = $cart->coupon_id;
 
 
 
             }
 
-         }
+        }
 
-         if($coupon_code!=NULL)
-         {
+        if ($coupon_code != NULL) {
 
 
-            $total = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
+            $total = DB::table('carts')
+                ->where('user_id', Auth::user()->id)
+                ->where('product_order', 'no')
+                ->sum('subtotal');
 
-            
-            $coupon_code_price=DB::table('coupons')->where('code',$coupon_code)->value('percentage');
 
-            $coupon_code_price=floor($coupon_code_price);
+            $coupon_code_price = DB::table('coupons')
+                ->where('code', $coupon_code)
+                ->value('percentage');
 
-            $discount_price=(($total*$coupon_code_price)/100);
-            $discount_price=floor($discount_price);
+            $coupon_code_price = floor($coupon_code_price);
+
+            $discount_price = (($total * $coupon_code_price) / 100);
+            $discount_price = floor($discount_price);
 
 
             $total = $total - $discount_price;
-      
 
 
-         }
-         else
-         {
 
-            $total = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->sum('subtotal');
+        } else {
 
-
-         }
-
-
-       $carts = DB::table('carts')->where('user_id',Auth::user()->id)->where('product_order','no')->update($data);
-   
-       
-       $details = [
-           'title' => 'Mail from RMS Admin',
-           'body' => 'Your order have been Placed Successfully.Your order Invoice no - '.$invoice. 'ok',
-       ];
-      
-       // \Mail::to(Auth::user()->email)->send(new \App\Mail\PaymentMail($details));
-
-       $extra_charge=DB::table('charges')->get();
-       $total_extra_charge=DB::table('charges')->sum('price');
+            $total = DB::table('carts')
+                ->where('user_id', Auth::user()->id)
+                ->where('product_order', 'no')
+                ->sum('subtotal');
 
 
-       $total=$total+$total_extra_charge;
-       $without_discount_price=$total+$total_extra_charge;
+        }
 
 
-       Session::put('products',$products);
-       Session::put('invoice',$invoice);
-       Session::put('total',$total);
-       Session::put('extra_charge',$extra_charge);
-       Session::put('discount_price',$discount_price);
-       Session::put('without_discount_price',$without_discount_price);
-       Session::put('date',date("Y-m-d"));
-
-       if($invoice==NULL)
-       {
-
-            $invoice="RMS";
+        $carts = DB::table('carts')
+            ->where('user_id', Auth::user()->id)
+            ->where('product_order', 'no')
+            ->update($data);
 
 
-       }
+        $details = [
+            'title' => 'Mail from RMS Admin',
+            'body' => 'Your order have been Placed Successfully.Your order Invoice no - ' . $invoice . 'ok',
+        ];
 
-       $qrcode = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate('RMS Verified'));
-       $pdf = PDF::loadView('mails.PayConfirmMail', $data);
+        // \Mail::to(Auth::user()->email)->send(new \App\Mail\PaymentMail($details));
 
-       Session::put('qrcode',$qrcode);
+        $extra_charge = DB::table('charges')->get();
+        $total_extra_charge = DB::table('charges')->sum('price');
 
-       $data['title']='Mail from RMS Admin';
 
-      
-      //return view('mails.PaymentMail');
+        $total = $total + $total_extra_charge;
+        $without_discount_price = $total + $total_extra_charge;
 
-      if($carts)
-      {
 
-        \Mail::send('mails..PayConfirmMail', $data, function($message)use($data, $pdf) {
-            $message->to(Auth::user()->email,Auth::user()->email)
+        Session::put('products', $products);
+        Session::put('invoice', $invoice);
+        Session::put('total', $total);
+        Session::put('extra_charge', $extra_charge);
+        Session::put('discount_price', $discount_price);
+        Session::put('without_discount_price', $without_discount_price);
+        Session::put('date', date("Y-m-d"));
+
+        if ($invoice == NULL) {
+
+            $invoice = "RMS";
+
+
+        }
+
+        $qrcode = base64_encode(QrCode::format('svg')
+            ->size(100)->errorCorrection('H')
+            ->generate('RMS Verified'));
+        $pdf = PDF::loadView('mails.PayConfirmMail', $data);
+
+        Session::put('qrcode', $qrcode);
+
+        $data['title'] = 'Mail from RMS Admin';
+
+
+        //return view('mails.PaymentMail');
+
+        if ($carts) {
+
+            \Mail::send('mails..PayConfirmMail', $data, function ($message) use ($data, $pdf) {
+                $message->to(Auth::user()->email, Auth::user()->email)
                     ->subject($data["title"])
                     ->attachData($pdf->output(), "Payment Copy.pdf");
-        });
+            });
 
 
 
 
-      }
- 
-      
-       
-        return view ('payConfirm');
+        }
+
+
+
+        return view('payConfirm');
 
 
 
@@ -387,7 +393,7 @@ class SslCommerzPaymentController extends Controller
                     ->where('transaction_id', $tran_id)
                     ->update(['status' => 'Processing']);
 
-               // echo "<br >Transaction is successfully Completed";
+                // echo "<br >Transaction is successfully Completed";
             } else {
                 /*
                 That means IPN did not work or IPN URL was not set in your merchant panel and Transation validation failed.
@@ -396,16 +402,16 @@ class SslCommerzPaymentController extends Controller
                 $update_product = DB::table('orders')
                     ->where('transaction_id', $tran_id)
                     ->update(['status' => 'Failed']);
-               // echo "validation Fail";
+                // echo "validation Fail";
             }
         } else if ($order_detials->status == 'Processing' || $order_detials->status == 'Complete') {
             /*
-             That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.
-             */
-           // echo "Transaction is successfully Completed";
+            That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.
+            */
+            // echo "Transaction is successfully Completed";
         } else {
             #That means something wrong happened. You can redirect customer to your product page.
-           // echo "Invalid Transaction";
+            // echo "Invalid Transaction";
         }
 
 
@@ -414,7 +420,7 @@ class SslCommerzPaymentController extends Controller
     public function fail(Request $request)
     {
 
-       
+
         return view('failurepay');
 
         $tran_id = $request->input('tran_id');
