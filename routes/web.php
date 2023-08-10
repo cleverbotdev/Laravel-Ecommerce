@@ -24,6 +24,7 @@ use App\Http\Controllers\AdminController;
 
 
 Route::get("/", 'App\Http\Controllers\HomeController@index');
+Route::get("/myhome", 'App\Http\Controllers\HomeController@index');
 
 Route::post("/register/confirm", 'App\Http\Controllers\HomeController@register')->name('register/confirm');
 Route::get("/redirects", 'App\Http\Controllers\HomeController@redirects');
